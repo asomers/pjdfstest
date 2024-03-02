@@ -42,7 +42,7 @@ macro_rules! eacces_search_permission_denied_test_case {
                 " component of the path prefix")]
             eacces_search_permission_denied, serialized $(, $attrs )?
         }
-        fn eacces_search_permission_denied(ctx: &mut SerializedTestContext) {
+        fn eacces_search_permission_denied(ctx: &mut crate::SerializedTestContext) {
             use nix::errno::Errno;
 
             let dir = ctx
