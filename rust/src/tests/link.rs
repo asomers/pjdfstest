@@ -216,10 +216,10 @@ enoent_either_named_file_test_case!(link);
 
 // link/07.t
 eacces_parent_dir_unwritable_test_case!(link,
-    |ctx: &TestContext, rwdir: &Path, rodir: &Path|
+    |_ctx: &TestContext, rwdir: &Path, rodir: &Path|
     {
         let srcpath = rwdir.join("src");
-        let file = File::create(&srcpath).unwrap();
+        File::create(&srcpath).unwrap();
         let dest = rodir.join("dest");
         link(&srcpath, &dest)
     }
