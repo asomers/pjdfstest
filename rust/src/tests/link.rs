@@ -5,10 +5,14 @@ use nix::{
     unistd::{chown, unlink},
 };
 
-use std::path::Path;
+use std::{
+    fs::File,
+    path::Path
+};
 
 use super::{
     errors::{
+        eacces::eacces_parent_dir_unwritable_test_case,
         efault::efault_either_test_case,
         eloop::eloop_either_test_case,
         enametoolong::{enametoolong_either_comp_test_case, enametoolong_either_path_test_case},
@@ -209,6 +213,17 @@ enametoolong_either_path_test_case!(link);
 
 // link/04.t
 enoent_either_named_file_test_case!(link);
+
+// link/07.t
+eacces_parent_dir_unwritable_test_case!(link,
+    |ctx: &TestContext, rwdir: &Path, rodir: &Path|
+    {
+        let srcpath = rwdir.join("src");
+        let file = File::create(&srcpath).unwrap();
+        let dest = rodir.join("dest");
+        link(&srcpath, &dest)
+    }
+);
 
 // link/08.t
 eloop_either_test_case!(link);
