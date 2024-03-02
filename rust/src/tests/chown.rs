@@ -2,6 +2,7 @@ use nix::unistd::chown;
 
 use crate::{context::TestContext, utils::lchown};
 
+use super::errors::eacces::eacces_search_permission_denied_test_case;
 use super::errors::efault::efault_path_test_case;
 use super::errors::eloop::{eloop_comp_test_case, eloop_final_comp_test_case};
 use super::errors::enametoolong::{enametoolong_comp_test_case, enametoolong_path_test_case};
@@ -11,7 +12,7 @@ use super::errors::enoent::{
 use super::errors::enotdir::enotdir_comp_test_case;
 use super::errors::erofs::erofs_named_test_case;
 
-fn chown_wrapper(ctx: &mut TestContext, path: &std::path::Path) -> nix::Result<()> {
+fn chown_wrapper(ctx: &TestContext, path: &std::path::Path) -> nix::Result<()> {
     let user = ctx.get_new_user();
     chown(path, Some(user.uid), None)
 }
@@ -26,6 +27,9 @@ enoent_comp_test_case!(chown, chown_wrapper);
 
 // chown/04.t
 enoent_symlink_named_file_test_case!(chown, chown_wrapper);
+
+// chown/05.t
+eacces_search_permission_denied_test_case!(chown, chown_wrapper);
 
 // chown/06.t
 eloop_comp_test_case!(chown, chown_wrapper);
