@@ -5,6 +5,7 @@ use nix::sys::stat::{mknod, Mode, SFlag};
 
 use crate::context::{FileType, SerializedTestContext, TestContext};
 
+use super::errors::eacces::eacces_search_permission_denied_test_case;
 use super::errors::eexist::eexist_file_exists_test_case;
 use super::errors::efault::efault_path_test_case;
 use super::errors::eloop::eloop_comp_test_case;
@@ -225,11 +226,18 @@ mod privileged {
         mknod(path, SFlag::S_IFCHR, Mode::empty(), 0)
     }
 
+    fn mknod_fifo_wrapper(_: &TestContext, path: &Path) -> nix::Result<()> {
+        mknod(path, SFlag::S_IFIFO, Mode::empty(), 0)
+    }
+
     // mknod/02.t
     enametoolong_comp_test_case!(mknod, mknod_block_wrapper, mknod_char_wrapper; root);
 
     // mknod/03.t
     enametoolong_path_test_case!(mknod, mknod_block_wrapper, mknod_char_wrapper; root);
+
+    // mknod/05.t
+    eacces_search_permission_denied_test_case!(mknod, mknod_fifo_wrapper; root);
 
     // mknod/08.t
     eexist_file_exists_test_case!(mknod, mknod_block_wrapper, mknod_char_wrapper; root);
