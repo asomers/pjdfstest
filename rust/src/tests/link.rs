@@ -218,15 +218,7 @@ enoent_either_named_file_test_case!(link);
 eacces_search_permission_denied_test_case2!(link);
 
 // link/07.t
-eacces_parent_dir_unwritable_test_case2!(link,
-    |_ctx: &TestContext, rwdir: &Path, rodir: &Path|
-    {
-        let srcpath = rwdir.join("src");
-        File::create(&srcpath).unwrap();
-        let dest = rodir.join("dest");
-        link(&srcpath, &dest)
-    }
-);
+eacces_parent_dir_unwritable_test_case2!(link);
 
 // link/08.t
 eloop_either_test_case!(link);

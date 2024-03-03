@@ -44,7 +44,7 @@ macro_rules! eacces_parent_dir_unwritable_test_case {
 /// The supplied expression will be called with one writable directory and one
 /// unwritable directory.
 macro_rules! eacces_parent_dir_unwritable_test_case2 {
-    ($syscall: ident, $f: expr $(; $attrs:tt )?) => {
+    ($syscall: ident $(; $attrs:tt )?) => {
         crate::test_case! {
             #[doc = concat!(stringify!($syscall),
                  " returns EACCESS if it requires writing to a directory that",
@@ -54,20 +54,29 @@ macro_rules! eacces_parent_dir_unwritable_test_case2 {
         fn eacces_parent_dir_unwritable(ctx: &mut SerializedTestContext) {
             use nix::errno::Errno;
 
-            let dir1 = ctx
+            let rwdir = ctx
                 .new_file(crate::context::FileType::Dir)
                 .name("writable_dir")
                 .mode(0o777)
                 .create()
                 .unwrap();
-            let dir2 = ctx
+            let rodir = ctx
                 .new_file(crate::context::FileType::Dir)
                 .name("unwritable_dir")
-                .mode(0o500)
+                .mode(0o555)
                 .create()
                 .unwrap();
+            let srcpath = rwdir.join("src");
+            let dstpath = rodir.join("dst");
+            let dstpath2 = rodir.join("dst2");
+            let dstpath3 = rodir.join("dst3");
+            ::std::fs::File::create(&srcpath).unwrap();
+            ::std::fs::File::create(&dstpath2).unwrap();
             ctx.as_user(ctx.get_new_user(), None, || {
-                assert_eq!($f(ctx, &dir1, &dir2), Err(Errno::EACCES));
+                // Destination directory is unwritable
+                assert_eq!($syscall(&srcpath, &dstpath), Err(Errno::EACCES));
+                // Both directories are the same
+                assert_eq!($syscall(&dstpath2, &dstpath3), Err(Errno::EACCES));
             });
         }
     };
