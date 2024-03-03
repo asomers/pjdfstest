@@ -58,6 +58,13 @@ macro_rules! eacces_search_permission_denied_test_case {
             });
         }
     };
+
+    ($syscall: ident $( ($( $($before:expr),* ,)? ~path $(, $($after:expr),*)?) )?) => {
+        eacces_search_permission_denied_test_case !($syscall, |_ctx: &crate::context::SerializedTestContext,
+                                             path: &std::path::Path| {
+                $syscall($( $($($before),* ,)? )? path $( $(, $($after),*)? )?)
+        });
+    };
 }
 
 
