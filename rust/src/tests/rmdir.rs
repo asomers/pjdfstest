@@ -1,5 +1,5 @@
 use std::{
-    fs::metadata,
+    fs::{DirBuilder, metadata},
     path::{Path, PathBuf},
     process::Command,
 };
@@ -8,7 +8,7 @@ use nix::errno::Errno;
 
 use crate::{
     config::Config,
-    context::TestContext,
+    context::{SerializedTestContext, TestContext},
     tests::assert_mtime_changed, utils::rmdir
 };
 
@@ -150,6 +150,26 @@ fn eexist_enotempty_non_empty_dir(ctx: &mut TestContext, ft: crate::context::Fil
 
 // rmdir/07.t
 eacces_search_permission_denied_test_case!(rmdir(~path));
+
+// rmdir/08.t
+crate::test_case! {
+    /// rmdir returns EACCESS if it requires writing to a directory that denies write permission
+    eacces_parent_dir_unwritable, serialized, root
+}
+fn eacces_parent_dir_unwritable(ctx: &mut SerializedTestContext) {
+    let dir = ctx
+        .new_file(crate::context::FileType::Dir)
+        .name("unwriteable_dir")
+        .mode(0o555)
+        .create()
+        .unwrap();
+    let path = dir.join("foo");
+    DirBuilder::new().create(&path).unwrap();
+
+    ctx.as_user(ctx.get_new_user(), None, || {
+        assert_eq!(rmdir(&path), Err(Errno::EACCES));
+    });
+}
 
 crate::test_case! {
     /// rmdir returns EINVAL if the last component of the path is '.'
