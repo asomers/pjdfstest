@@ -10,6 +10,7 @@ use nix::unistd::close;
 
 use crate::context::{FileType, SerializedTestContext, TestContext};
 
+use super::errors::eacces::eacces_search_permission_denied_test_case;
 use super::errors::eexist::eexist_file_exists_test_case;
 use super::errors::efault::efault_path_test_case;
 use super::errors::eloop::eloop_comp_test_case;
@@ -211,6 +212,9 @@ enoent_comp_test_case!(open(~path, OFlag::O_CREAT, Mode::from_bits_truncate(0o64
 
 // open/04.t
 enoent_named_file_test_case!(open(~path, OFlag::O_RDONLY, Mode::empty()));
+
+// open/05.t
+eacces_search_permission_denied_test_case!(open(~path, OFlag::O_RDONLY, Mode::empty()));
 
 fn open_flag_wrapper_ctx(flags: OFlag) -> impl Fn(&mut TestContext, &Path) -> nix::Result<RawFd> {
     move |_, path| open(path, flags, Mode::empty())
