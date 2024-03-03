@@ -15,6 +15,7 @@ use crate::{
 use super::{
     assert_ctime_changed,
     errors::{
+        eacces::eacces_search_permission_denied_test_case2,
         efault::efault_either_test_case,
         eloop::eloop_either_test_case,
         enametoolong::{enametoolong_either_comp_test_case, enametoolong_either_path_test_case},
@@ -299,6 +300,9 @@ enametoolong_either_path_test_case!(rename);
 
 // rename/03.t
 enoent_either_named_file_test_case!(rename);
+
+// rename/04.t
+eacces_search_permission_denied_test_case2!(rename);
 
 // reanme/11.t
 eloop_either_test_case!(rename);
