@@ -4,6 +4,7 @@ use nix::{sys::stat::Mode, unistd::mkdir};
 
 use crate::context::{SerializedTestContext, TestContext};
 
+use super::errors::eacces::eacces_search_permission_denied_test_case;
 use super::errors::eexist::eexist_file_exists_test_case;
 use super::errors::efault::efault_path_test_case;
 use super::errors::eloop::eloop_comp_test_case;
@@ -61,6 +62,9 @@ enametoolong_path_test_case!(mkdir(~path, Mode::empty()));
 
 // mkdir/04.t
 enoent_comp_test_case!(mkdir(~path, Mode::empty()));
+
+// mkdir/05.t
+eacces_search_permission_denied_test_case!(mkdir(~path, Mode::empty()));
 
 // mkdir/07.t
 eloop_comp_test_case!(mkdir(~path, Mode::empty()));
