@@ -54,7 +54,7 @@ mod lchown {
 
     use super::*;
 
-    fn lchown_wrapper<P: AsRef<Path>>(ctx: &mut TestContext, path: P) -> nix::Result<()> {
+    fn lchown_wrapper<P: AsRef<Path>>(ctx: &TestContext, path: P) -> nix::Result<()> {
         let path = path.as_ref();
         let user = ctx.get_new_user();
         lchown(path, Some(user.uid), Some(user.gid))
@@ -63,6 +63,9 @@ mod lchown {
     enotdir_comp_test_case!(lchown, lchown_wrapper);
     enoent_named_file_test_case!(lchown, lchown_wrapper);
     enoent_comp_test_case!(lchown, lchown_wrapper);
+
+    // chown/05.t
+    eacces_search_permission_denied_test_case!(chown, lchown_wrapper);
 
     // chown/06.t#L25
     eloop_comp_test_case!(lchown, lchown_wrapper);
