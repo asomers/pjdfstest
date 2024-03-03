@@ -5,10 +5,7 @@ use nix::{
     unistd::{chown, unlink},
 };
 
-use std::{
-    fs::File,
-    path::Path
-};
+use std::path::Path;
 
 use super::{
     errors::{
