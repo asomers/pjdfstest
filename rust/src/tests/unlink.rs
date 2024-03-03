@@ -154,7 +154,7 @@ enametoolong_path_test_case!(unlink);
 enoent_named_file_test_case!(unlink);
 
 // unlink/05.t
-eacces_search_permission_denied_test_case!(unlink, |_: &_, path| unlink(path));
+eacces_search_permission_denied_test_case!(unlink(~path));
 
 // unlink/07.t
 eloop_comp_test_case!(unlink);
