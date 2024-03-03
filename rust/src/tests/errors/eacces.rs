@@ -12,7 +12,7 @@ macro_rules! eacces_parent_dir_unwritable_test_case {
                  " denies write permission")]
             eacces_parent_dir_unwritable, serialized, root $(, $attrs )?
         }
-        fn eacces_parent_dir_unwritable(ctx: &mut SerializedTestContext) {
+        fn eacces_parent_dir_unwritable(ctx: &mut crate::SerializedTestContext) {
             use nix::errno::Errno;
 
             let dir = ctx
@@ -51,7 +51,7 @@ macro_rules! eacces_parent_dir_unwritable_test_case2 {
                  " denies write permission")]
             eacces_parent_dir_unwritable, serialized, root $(, $attrs )?
         }
-        fn eacces_parent_dir_unwritable(ctx: &mut SerializedTestContext) {
+        fn eacces_parent_dir_unwritable(ctx: &mut crate::SerializedTestContext) {
             use nix::errno::Errno;
 
             let rwdir = ctx
