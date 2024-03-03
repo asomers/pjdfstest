@@ -14,6 +14,7 @@ use nix::{
 };
 
 use super::errors::{
+    eacces::eacces_search_permission_denied_test_case,
     efault::efault_path_test_case,
     eloop::{eloop_comp_test_case, eloop_final_comp_test_case},
     enametoolong::{enametoolong_comp_test_case, enametoolong_path_test_case},
@@ -132,6 +133,9 @@ enoent_named_file_test_case!(chmod(~path, Mode::empty()));
 enoent_comp_test_case!(chmod(~path, Mode::empty()));
 enoent_symlink_named_file_test_case!(chmod(~path, Mode::empty()));
 
+// chmod/05.t
+eacces_search_permission_denied_test_case!(chmod(~path, Mode::empty()));
+
 // chmod/06.t
 eloop_comp_test_case!(chmod(~path, Mode::empty()));
 
@@ -201,6 +205,9 @@ mod lchmod {
     enotdir_comp_test_case!(lchmod(~path, Mode::empty()));
     enoent_named_file_test_case!(lchmod(~path, Mode::empty()));
     enoent_comp_test_case!(lchmod(~path, Mode::empty()));
+
+    // chmod/05.t
+    eacces_search_permission_denied_test_case!(lchmod(~path, Mode::empty()));
 
     // chmod/06.t#L25
     eloop_comp_test_case!(lchmod(~path, Mode::empty()));
