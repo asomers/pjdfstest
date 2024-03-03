@@ -11,7 +11,7 @@ use crate::{
 };
 
 use super::errors::{
-    eacces::eacces_search_permission_denied_test_case,
+    eacces::{eacces_parent_dir_unwritable_test_case, eacces_search_permission_denied_test_case},
     eexist::eexist_file_exists_test_case,
     efault::efault_either_test_case,
     enametoolong::{enametoolong_comp_test_case, enametoolong_either_path_test_case},
@@ -100,6 +100,9 @@ enoent_comp_test_case!(symlink(Path::new("test"), ~path));
 
 // symlink/05.t
 eacces_search_permission_denied_test_case!(symlink(Path::new("test"), ~path));
+
+// symlink/06.t
+eacces_parent_dir_unwritable_test_case!(symlink(Path::new("test"), ~path));
 
 // symlink/08.t
 eexist_file_exists_test_case!(symlink(Path::new("test"), ~path));
