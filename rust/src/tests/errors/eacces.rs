@@ -48,7 +48,7 @@ macro_rules! eacces_search_permission_denied_test_case {
             let dir = ctx
                 .new_file(crate::context::FileType::Dir)
                 .name("unsearchable_dir")
-                .mode(0o644)
+                .mode(0o666)
                 .create()
                 .unwrap();
             let path = dir.join("foo");
