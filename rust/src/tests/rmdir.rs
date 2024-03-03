@@ -151,7 +151,7 @@ fn eexist_enotempty_non_empty_dir(ctx: &mut TestContext, ft: crate::context::Fil
 // rmdir/07.t
 eacces_search_permission_denied_test_case!(mknod, |_: &SerializedTestContext, path| {
     rmdir(path)
-}; root);
+});
 
 crate::test_case! {
     /// rmdir returns EINVAL if the last component of the path is '.'

@@ -237,7 +237,7 @@ mod privileged {
     enametoolong_path_test_case!(mknod, mknod_block_wrapper, mknod_char_wrapper; root);
 
     // mknod/05.t
-    eacces_search_permission_denied_test_case!(mknod, mknod_fifo_wrapper; root);
+    eacces_search_permission_denied_test_case!(mknod, mknod_fifo_wrapper);
 
     // mknod/08.t
     eexist_file_exists_test_case!(mknod, mknod_block_wrapper, mknod_char_wrapper; root);

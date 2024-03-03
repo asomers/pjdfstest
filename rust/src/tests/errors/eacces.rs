@@ -40,7 +40,7 @@ macro_rules! eacces_search_permission_denied_test_case {
             #[doc = concat!(stringify!($syscall),
                 " returns EACCES when search permission is denied for a",
                 " component of the path prefix")]
-            eacces_search_permission_denied, serialized $(, $attrs )?
+            eacces_search_permission_denied, serialized, root $(, $attrs )?
         }
         fn eacces_search_permission_denied(ctx: &mut crate::SerializedTestContext) {
             use nix::errno::Errno;
