@@ -8,7 +8,7 @@ use nix::errno::Errno;
 
 use crate::{
     config::Config,
-    context::{SerializedTestContext, TestContext},
+    context::TestContext,
     tests::assert_mtime_changed, utils::rmdir
 };
 
@@ -149,9 +149,7 @@ fn eexist_enotempty_non_empty_dir(ctx: &mut TestContext, ft: crate::context::Fil
 }
 
 // rmdir/07.t
-eacces_search_permission_denied_test_case!(mknod, |_: &SerializedTestContext, path| {
-    rmdir(path)
-});
+eacces_search_permission_denied_test_case!(rmdir(~path));
 
 crate::test_case! {
     /// rmdir returns EINVAL if the last component of the path is '.'
