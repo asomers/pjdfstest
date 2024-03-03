@@ -1,3 +1,5 @@
+use std::fs::File;
+
 use nix::{sys::stat::fstat, unistd::unlink};
 
 use crate::{
@@ -9,7 +11,7 @@ use crate::{
 use super::{
     assert_mtime_changed,
     errors::{
-        eacces::eacces_search_permission_denied_test_case,
+        eacces::eacces_search_permission_denied_test_case, 
         efault::efault_path_test_case,
         eloop::eloop_comp_test_case,
         enametoolong::{enametoolong_comp_test_case, enametoolong_path_test_case},
@@ -155,6 +157,28 @@ enoent_named_file_test_case!(unlink);
 
 // unlink/05.t
 eacces_search_permission_denied_test_case!(unlink(~path));
+
+// unlink/06.t
+crate::test_case! {
+    /// unlink returns EACCESS if it requires writing to a directory that denies write permission
+    eacces_parent_dir_unwritable, serialized, root
+}
+fn eacces_parent_dir_unwritable(ctx: &mut SerializedTestContext) {
+    use nix::errno::Errno;
+
+    let dir = ctx
+        .new_file(crate::context::FileType::Dir)
+        .name("unwriteable_dir")
+        .mode(0o555)
+        .create()
+        .unwrap();
+    let path = dir.join("foo");
+    File::create(&path).unwrap();
+
+    ctx.as_user(ctx.get_new_user(), None, || {
+        assert_eq!(unlink(&path), Err(Errno::EACCES));
+    });
+}
 
 // unlink/07.t
 eloop_comp_test_case!(unlink);
