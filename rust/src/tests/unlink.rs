@@ -9,6 +9,7 @@ use crate::{
 use super::{
     assert_mtime_changed,
     errors::{
+        eacces::eacces_search_permission_denied_test_case,
         efault::efault_path_test_case,
         eloop::eloop_comp_test_case,
         enametoolong::{enametoolong_comp_test_case, enametoolong_path_test_case},
@@ -151,6 +152,9 @@ enametoolong_path_test_case!(unlink);
 
 // unlink/04.t
 enoent_named_file_test_case!(unlink);
+
+// unlink/05.t
+eacces_search_permission_denied_test_case!(unlink, |_: &_, path| unlink(path));
 
 // unlink/07.t
 eloop_comp_test_case!(unlink);
