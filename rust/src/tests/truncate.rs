@@ -10,6 +10,7 @@ use crate::{
 };
 
 use super::errors::{
+    eacces::eacces_search_permission_denied_test_case,
     efault::efault_path_test_case,
     eloop::eloop_comp_test_case,
     enametoolong::{enametoolong_comp_test_case, enametoolong_path_test_case},
@@ -102,6 +103,9 @@ enametoolong_path_test_case!(truncate(~path, 0));
 // (f)truncate/04.t
 enoent_named_file_test_case!(truncate(~path, 0));
 enoent_comp_test_case!(truncate(~path, 0));
+
+// truncate/05.t
+eacces_search_permission_denied_test_case!(truncate(~path, 1234));
 
 // truncate/07.t
 eloop_comp_test_case!(truncate(~path, 0));
