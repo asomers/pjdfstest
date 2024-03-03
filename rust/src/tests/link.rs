@@ -12,7 +12,7 @@ use std::{
 
 use super::{
     errors::{
-        eacces::{eacces_search_permission_denied_test_case2, eacces_parent_dir_unwritable_test_case},
+        eacces::{eacces_search_permission_denied_test_case2, eacces_parent_dir_unwritable_test_case2},
         efault::efault_either_test_case,
         eloop::eloop_either_test_case,
         enametoolong::{enametoolong_either_comp_test_case, enametoolong_either_path_test_case},
@@ -218,7 +218,7 @@ enoent_either_named_file_test_case!(link);
 eacces_search_permission_denied_test_case2!(link);
 
 // link/07.t
-eacces_parent_dir_unwritable_test_case!(link,
+eacces_parent_dir_unwritable_test_case2!(link,
     |_ctx: &TestContext, rwdir: &Path, rodir: &Path|
     {
         let srcpath = rwdir.join("src");
