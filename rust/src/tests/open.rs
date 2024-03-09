@@ -8,7 +8,10 @@ use nix::sys::stat::Mode;
 use nix::sys::uio::pwrite;
 use nix::unistd::close;
 
-use crate::context::{FileType, SerializedTestContext, TestContext};
+use crate::{
+    context::{FileType, SerializedTestContext, TestContext},
+    utils::chmod
+};
 
 use super::errors::eacces::eacces_search_permission_denied_test_case;
 use super::errors::eexist::eexist_file_exists_test_case;
@@ -215,6 +218,89 @@ enoent_named_file_test_case!(open(~path, OFlag::O_RDONLY, Mode::empty()));
 
 // open/05.t
 eacces_search_permission_denied_test_case!(open(~path, OFlag::O_RDONLY, Mode::empty()));
+
+// open/06.t
+crate::test_case! {
+    /// open returns EACCESS when the required permissions (for reading and/or writing) are denied
+    /// for the given flags
+    eacces_required_permissions_denied, serialized, root
+}
+fn eacces_required_permissions_denied(ctx: &mut SerializedTestContext) {
+    // Outline:
+    // For filetype in Regular, FIFO, Directory
+    //   For mode in RDONLY, WRONLY, RDWR
+    //     * nobody cannot open file if the "other" perm denies the appropriate bit
+    //     * a group member cannot open file if the "group" and "other" perm denies the appropriate
+    //       bit
+    //     * The owner cannot open file if all perms deny the appropriate bit
+    #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+    enum Relationship {
+        User,
+        Group,
+        Other,
+    }
+    let user = ctx.get_new_user();
+    let group = ctx.get_new_group();
+    for relationship in [Relationship::Other, Relationship::Group, Relationship::User] {
+        for ft in [FileType::Regular, FileType::Fifo, FileType::Dir] {
+            let path = ctx.create(ft.clone()).unwrap();
+            if matches!(relationship, Relationship::Group) {
+                nix::unistd::chown(&path, None, Some(group.gid)).unwrap();
+            } else if matches!(relationship, Relationship::User) {
+                nix::unistd::chown(&path, Some(user.uid), None).unwrap();
+            }
+            let base_mode = match relationship {
+                Relationship::Other => 0o770,
+                Relationship::Group => 0o707,
+                Relationship::User => 0o077,
+            };
+            let shift = match relationship {
+                Relationship::Other => 0,
+                Relationship::Group => 3,
+                Relationship::User => 6,
+            };
+
+            println!("Relationship: {:?}, FileType: {:?}", relationship, ft);
+            chmod(&path, Mode::from_bits_truncate(base_mode | (3 << shift))).unwrap();
+            ctx.as_user(&user, Some(&[group.gid]), || {
+                assert_eq!(Err(Errno::EACCES), open(&path, OFlag::O_RDONLY, Mode::empty()));
+                if ft != FileType::Dir {
+                    assert_eq!(Err(Errno::EACCES), open(&path, OFlag::O_RDWR, Mode::empty()));
+                }
+            });
+            if ft != FileType::Dir {
+                chmod(&path, Mode::from_bits_truncate(base_mode | (5 << shift))).unwrap();
+                ctx.as_user(&user, Some(&[group.gid]), || {
+                    assert_eq!(Err(Errno::EACCES), open(&path, OFlag::O_WRONLY, Mode::empty()));
+                    assert_eq!(Err(Errno::EACCES), open(&path, OFlag::O_RDWR, Mode::empty()));
+                });
+            }
+        }
+    }
+
+    //for ft in [FileType::Regular, FileType::Fifo, FileType::Dir] {
+        //let path = ctx.create(ft.clone()).unwrap();
+        //crate::utils::chmod(&path, Mode::from_bits_truncate(0o773)).unwrap();
+        //ctx.as_user(&user, None, || {
+            //assert_eq!(Err(Errno::EACCES), open(&path, OFlag::O_RDONLY, Mode::empty()));
+            //if ft != FileType::Dir {
+                //assert_eq!(Err(Errno::EACCES), open(&path, OFlag::O_RDWR, Mode::empty()));
+            //}
+        //});
+        //if ft != FileType::Dir {
+            //crate::utils::chmod(&path, Mode::from_bits_truncate(0o775)).unwrap();
+            //ctx.as_user(&user, None, || {
+                //assert_eq!(Err(Errno::EACCES), open(&path, OFlag::O_WRONLY, Mode::empty()));
+            //});
+            //crate::utils::chmod(&path, Mode::from_bits_truncate(0o773)).unwrap();
+            //ctx.as_user(&user, None, || {
+                //assert_eq!(Err(Errno::EACCES), open(&path, OFlag::O_RDWR, Mode::empty()));
+            //});
+        //}
+        ////for oflag in [OFlag::O_RDONLY, OFlag::O_WRONLY] { // TODO: O_RDWR
+    //}
+}
+
 
 fn open_flag_wrapper_ctx(flags: OFlag) -> impl Fn(&mut TestContext, &Path) -> nix::Result<RawFd> {
     move |_, path| open(path, flags, Mode::empty())
