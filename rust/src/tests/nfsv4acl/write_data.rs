@@ -47,9 +47,11 @@ crate::test_case! {
     /// ACL_WRITE_DATA on a directory allows a user to move in files from
     /// elsewhere, overwriting existing files if necessary.
     // granular/00.t:L56
-    can_rename_files, serialized, root, FileSystemFeature::Nfsv4Acls
+    // granular/03.t:L37
+    // granular/03.t:L41
+    can_rename_files_in, serialized, root, FileSystemFeature::Nfsv4Acls
 }
-fn can_rename_files(ctx: &mut SerializedTestContext) {
+fn can_rename_files_in(ctx: &mut SerializedTestContext) {
     let user = ctx.get_new_user();
     let dir = ctx.new_file(FileType::Dir).mode(0o755).create().unwrap();
     let odir = ctx.new_file(FileType::Dir).mode(0o777).create().unwrap();
@@ -64,9 +66,29 @@ fn can_rename_files(ctx: &mut SerializedTestContext) {
 }
 
 crate::test_case! {
+    /// ACL_WRITE_DATA on a directory allows a user to move files out of the
+    /// directory.
+    // granular/03.t:L30
+    can_rename_files_out, serialized, root, FileSystemFeature::Nfsv4Acls
+}
+fn can_rename_files_out(ctx: &mut SerializedTestContext) {
+    let user = ctx.get_new_user();
+    let dir = ctx.new_file(FileType::Dir).mode(0o755).create().unwrap();
+    let ndir = ctx.new_file(FileType::Dir).mode(0o777).create().unwrap();
+    let oldpath = FileBuilder::new(FileType::Regular, &dir).create().unwrap();
+    let newpath = ndir.join("dest");
+
+    prependacl(&dir, &format!("allow::user:{}:write_data", user.uid));
+
+    ctx.as_user(user, None, move || {
+        rename(&oldpath, &newpath).unwrap();
+    });
+}
+
+crate::test_case! {
     /// ACL_WRITE_DATA on a directory does not allow a user to move in
     /// directories from elsewhere.
-    // granular/00.t:L56
+    // granular/00.t:L65
     cant_rename_directories, serialized, root, FileSystemFeature::Nfsv4Acls
 }
 fn cant_rename_directories(ctx: &mut SerializedTestContext) {
@@ -105,6 +127,7 @@ fn rmdir_ok(ctx: &mut SerializedTestContext) {
 crate::test_case! {
     /// ACL_WRITE_DATA on a directory allows a user to unlink other users' files
     // granular/00.t:L63
+    // granular/03.t:L24
     unlink_ok, serialized, root, FileSystemFeature::Nfsv4Acls
 }
 fn unlink_ok(ctx: &mut SerializedTestContext) {

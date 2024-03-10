@@ -126,3 +126,10 @@ fn denied_rename(ctx: &mut SerializedTestContext, ft: FileType) {
         assert_eq!(Err(Errno::EPERM), rename(&file, &newpath));
     });
 }
+
+// TODO
+// 03.t:L77
+// 03.t:L92
+// 03.t:L97
+// 03.t:L107
+// 03.t:L122
