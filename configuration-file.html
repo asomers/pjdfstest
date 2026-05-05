@@ -1,0 +1,321 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Configuration file - PJDFSTest</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">PJDFSTest</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/saidsay-so/pjdfstest" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="configuration-file"><a class="header" href="#configuration-file">Configuration file</a></h1>
+<p>The test runner can read a configuration file. For now, only the TOML format is supported.
+Its path can be specified by using the <code>-c PATH</code> flag.</p>
+<h2 id="sections"><a class="header" href="#sections">Sections</a></h2>
+<h3 id="features"><a class="header" href="#features">[features]</a></h3>
+<p>Some features are not available for every file system.
+For tests requiring such features,
+the execution becomes opt-in.
+The user can enable their execution,
+by adding the corresponding feature as a key in this section.
+A list of these opt-in features is provided
+when executing the runner with <code>-l</code> argument.</p>
+<p>For example, with <code>posix_fallocate</code>:</p>
+<pre><code class="language-toml">[features]
+posix_fallocate = {}
+
+# Can also be specified by using key notation
+# [features.posix_fallocate]
+</code></pre>
+<h4 id="feature-list"><a class="header" href="#feature-list">Feature list</a></h4>
+<p>The following features can be enabled but do not require any additional configuration:</p>
+<ul>
+<li><strong>chflags</strong> - The <a href="https://man.freebsd.org/cgi/man.cgi?chflags(1)"><code>chflags</code></a> syscall is available</li>
+<li><strong>nfsv4_acls</strong> - NFSv4 style Access Control Lists are available</li>
+<li><strong>posix_fallocate</strong> - The <a href="https://pubs.opengroup.org/onlinepubs/007904975/functions/posix_fallocate.html"><code>posix_fallocate</code></a> syscall is available</li>
+<li><strong>rename_ctime</strong> - <a href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/rename.html"><code>rename</code></a> changes <code>st_ctime</code> on success (POSIX does not require a file system to update a file's ctime when it gets renamed, but some file systems choose to do it anyway)</li>
+<li><strong>stat_st_birthtime</strong> - <code>struct stat</code> contains an <a href="https://man.freebsd.org/cgi/man.cgi?stat(2)"><code>st_birthtime</code></a> field</li>
+<li><strong>chflags_sf_snapshot</strong> - The <a href="https://man.freebsd.org/cgi/man.cgi?chflags(2)"><code>SF_SNAPSHOT</code></a> flag can be set with <code>chflags</code></li>
+<li><strong>utime_now</strong> - The <a href="https://pubs.opengroup.org/onlinepubs/9699919799.orig/functions/futimens.html"><code>UTIME_NOW</code></a> constant is available</li>
+<li><strong>utimensat</strong> - The <a href="https://pubs.opengroup.org/onlinepubs/9699919799.orig/functions/utimensat.html"><code>utimensat</code></a> syscall is available</li>
+</ul>
+<p>Following features require additional configuration.</p>
+<h4 id="file_flags"><a class="header" href="#file_flags">file_flags</a></h4>
+<p>Some tests are related to file flags.
+However, not all file systems and operating systems support all flags.
+To give a sufficient level of granularity, each supported flag can be
+specified in the configuration with the <code>file_flags</code> array.</p>
+<pre><code class="language-toml">[features]
+posix_fallocate = {}
+file_flags = ["UF_IMMUTABLE"]
+</code></pre>
+<h4 id="secondary_fs"><a class="header" href="#secondary_fs">secondary_fs</a></h4>
+<p>Some tests require a secondary file system.
+This can be specified in the configuration with the <code>secondary_fs</code> key,
+but also with the <code>secondary_fs</code> argument.
+The argument takes precedence over the configuration.</p>
+<pre><code class="language-toml">[features]
+secondary_fs = "/mnt/ISO"
+</code></pre>
+<h3 id="dummy_auth"><a class="header" href="#dummy_auth">[dummy_auth]</a></h3>
+<p>This section allows to modify the mechanism for switching users, which is required by some tests.</p>
+<pre><code class="language-toml">[dummy_auth]
+entries = [
+  ["nobody", "nobody"],
+  # nogroup instead for some Linux distros
+  # ["nobody", "nogroup"],
+  ["tests", "tests"],
+  ["pjdfstest", "pjdfstest"],
+]
+</code></pre>
+<ul>
+<li><code>entries</code> - An entry is composed of a username and its associated group.
+Exactly 3 entries need to be specified if the default ones cannot be used.</li>
+</ul>
+<h3 id="settings"><a class="header" href="#settings">[settings]</a></h3>
+<pre><code class="language-toml">[settings]
+naptime = 0.001
+allow_remount = false
+expected_failures = []
+</code></pre>
+<ul>
+<li><code>naptime</code> - The duration for a "short" sleep. It should be greater than the
+timestamp granularity of the file system under test. The default value is 1
+second.</li>
+<li><code>allow_remount</code> - If set to <code>true</code>, the runner will run the EROFS tests,
+which require to remount the file system on which
+pjdsfstest is run as read-only.</li>
+<li><code>expected_failures</code> - A list of test case names.  Any test case present here
+will be expected to fail, and its failure will not cause the entire run to be
+considered a failure.  But inversely, if a test case listed here passes, that
+<em>will</em> cause the entire run to be considered a failure.  This mechanism can
+be used by file systems under development to detect regressions before they
+are fully implemented.  It can also be used as a more granular feature gate.
+However, note that tests listed here will still be run, unlike tests whose
+execution is filtered out by the <code>features</code> section.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="compatibility.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="tests-structure.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="compatibility.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="tests-structure.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="mermaid.min.js"></script>
+        <script src="mermaid-init.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

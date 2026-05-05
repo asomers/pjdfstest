@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":["ALLPERMS"],"fn":["chmod","get_mountpoint","lchmod","lchown","link","open","rename","rmdir","symlink"],"mod":["dev"]};
